@@ -1019,6 +1019,11 @@ Words = (
     'zero', \
     'zinc', \
     'zone', \
+    'plod', \
+    'quad', \    
+    'bass', \
+    'ally', \
+    'plop', \
     'zoom'
 
 )
