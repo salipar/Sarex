@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Word Path Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            text-align: center;
+            background-color: #f4f4f9;
+        }
+        input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 20px 0;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+        .result p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Word Path Generator</h1>
+
+    <form id="wordForm">
+        <input type="text" id="sourceword" name="sourceword" placeholder="Enter source word" required><br>
+        <input type="text" id="targetword" name="targetword" placeholder="Enter target word" required><br>
+        <button type="submit">Generate Path</button>
+    </form>
+
+    <div class="result" id="result">
+        <!-- The result will be displayed here -->
+    </div>
+
+    <script>
+        document.getElementById('wordForm').onsubmit = function(e) {
+            e.preventDefault();
+
+            const sourceword = document.getElementById('sourceword').value;
+            const targetword = document.getElementById('targetword').value;
+
+            fetch('/api/wordpath', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `sourceword=${sourceword}&targetword=${targetword}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = ''; // Clear previous results
+
+                data.result.forEach(word => {
+                    const p = document.createElement('p');
+                    p.textContent = word;
+                    resultDiv.appendChild(p);
+                });
+            });
+        };
+    </script>
+
+</body>
+</html>

@@ -10,7 +10,10 @@ app.register_blueprint(funcs_bp)
 def calc():
     return render_template('calc.html')
 
-
+@app.route('/words')
+def words():
+    return render_template('words.html')
+    
 @app.route('/')
 def hello_world():
 #    return 'Hello, Sali!'
