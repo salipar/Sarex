@@ -74,6 +74,20 @@
                 const resultDiv = document.getElementById('result');
                 resultDiv.innerHTML = ''; // Clear previous results
 
+
+                if (data.result.length === 0) {
+                    const p = document.createElement('p');
+                    p.textContent = `It is not possible to move from ${sourceword} to ${targetword}`;
+                    resultDiv.appendChild(p);
+                } else {
+                    data.result.forEach(word => {
+                        const p = document.createElement('p');
+                        p.textContent = word;
+                        resultDiv.appendChild(p);
+                    });
+                }
+
+                
                 data.result.forEach(word => {
                     const p = document.createElement('p');
                     p.textContent = word;
