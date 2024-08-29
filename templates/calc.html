@@ -4,6 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculation Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            text-align: center;
+            background-color: #f4f4f9;
+        }
+        input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 20px 0;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
     <script>
         function calculateResult(event) {
             event.preventDefault();
@@ -20,8 +54,9 @@
             })
             .then(response => response.json())
             .then(data => {
+                const resultInput = document.getElementById('result');
                 if (data.result !== undefined) {
-                    document.getElementById('result').value = data.result;
+                    resultInput.value = data.result;
                 } else {
                     alert(data.error);
                 }
@@ -32,18 +67,17 @@
 <body>
 
     <h1>Calculation Form</h1>
+
     <form onsubmit="calculateResult(event)">
-        <label for="num1">Input 1:</label>
-        <input type="text" id="num1" name="num1" required><br><br>
-
-        <label for="num2">Input 2:</label>
-        <input type="text" id="num2" name="num2" required><br><br>
-
-        <label for="result">Result:</label>
-        <input type="text" id="result" name="result" readonly><br><br>
-
+        <input type="text" id="num1" name="num1" placeholder="Enter first number" required><br>
+        <input type="text" id="num2" name="num2" placeholder="Enter second number" required><br>
         <button type="submit">Calculate</button>
     </form>
+
+    <div class="result">
+        <label for="result">Result:</label>
+        <input type="text" id="result" name="result" readonly>
+    </div>
 
 </body>
 </html>
