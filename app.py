@@ -1,6 +1,15 @@
 from flask import Flask, render_template
+from funcs import funcs_bp  # Import the Blueprint
 
 app = Flask(__name__)
+
+# Register the Blueprint
+app.register_blueprint(funcs_bp)
+
+@app.route('/calc')
+def calc():
+    return render_template('calc.html')
+
 
 @app.route('/')
 def hello_world():
