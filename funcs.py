@@ -1020,7 +1020,7 @@ Words = (
     'zinc', \
     'zone', \
     'plod', \
-    'quad', \    
+    'quad', \
     'bass', \
     'ally', \
     'plop', \
