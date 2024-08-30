@@ -1070,7 +1070,7 @@ def wordpath():
         
     else:       
         try:
-            L = nx.shortest_path(mG, sourceword, targetword)
+            L = list(nx.all_shortest_paths(mG, sourceword, targetword))
         except nx.NetworkXNoPath:
             ErrorMsg = 'In the current dictionary, there is no way to reach from ' + sourceword + ' to ' + targetword + '.'
 

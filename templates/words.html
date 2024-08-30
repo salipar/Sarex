@@ -4,6 +4,43 @@
     <meta charset="UTF-8">
     <title>Word Path Generator</title>
     <style>
+
+        .result {
+            display: flex;
+            justify-content: center; /* Centers the paths horizontally */
+            gap: 20px; /* Adds space between the paths */
+            margin-top: 20px;
+        }
+
+        .list-section {
+            flex: 0; /* Allows each path to take up equal space */
+            min-width: 200px; /* Ensures paths don't shrink below a certain width */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 20pix;
+        }
+
+        .list-title {
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .result-grid div {
+            padding: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+        }
+   
         body {
             font-family: Arial, sans-serif;
             margin: 40px;
@@ -39,6 +76,19 @@
         .result p {
             margin: 5px 0;
         }
+        .word-button {
+        display: block;
+        margin: 5px;
+        padding: 5px 10px;
+        border: none;
+        border-radius: 3px;
+        background-color: #eee;
+        color: #333;
+        font-size: 14px;
+        cursor: default;
+        text-align: center;
+}
+        
     </style>
     <link rel="icon" href="{{ url_for('static', filename='images/sarex.ico') }}" type="image/x-icon">
 </head>
@@ -81,19 +131,27 @@
                     p.textContent = `${data.error}`;
                     resultDiv.appendChild(p);
                 } else {
-                    data.result.forEach(word => {
-                        const p = document.createElement('p');
-                        p.textContent = word;
-                        resultDiv.appendChild(p);
+                    data.result.forEach((list, index) => {
+                        const listDiv = document.createElement('div');
+                        listDiv.className = 'list-section';
+
+                        const title = document.createElement('p');
+                        //title.textContent = `Path ${index + 1}`;
+                        title.className = 'list-title';
+                        listDiv.appendChild(title);
+
+                        list.forEach(word => {
+                            const button = document.createElement('div');
+                            button.className = 'word-button';
+                            button.textContent = word;
+                            listDiv.appendChild(button);
+                        });
+
+                        resultDiv.appendChild(listDiv);
                     });
                 }
 
-                
-             /*   data.result.forEach(word => {
-                    const p = document.createElement('p');
-                    p.textContent = word;
-                    resultDiv.appendChild(p);
-                });*/
+           
             });
         };
     </script>
