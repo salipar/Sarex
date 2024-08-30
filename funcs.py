@@ -1031,11 +1031,13 @@ Words = (
 mG = nx.Graph()
 mG.add_nodes_from(Words)
 
+print('Adding edges')
 for apair in combinations(Words, 2):
     w1, w2 = apair
     if diffby1(w1, w2):
         mG.add_edge(w1, w2)
 
+print('Completed adding edges')
 
 
 @funcs_bp.route('/api/calculate', methods=['POST'])
@@ -1055,10 +1057,14 @@ def calculate():
 
 @funcs_bp.route('/api/wordpath', methods=['POST'])
 def wordpath():
-    
+    ErrorMsg, L = '', []
     sourceword = request.form['sourceword']
     targetword = request.form['targetword']
-
-    L = nx.shortest_path(mG, sourceword, targetword)
+    try:
+        L = nx.shortest_path(mG, sourceword, targetword)
+    except nx.NetworkXNoPath:
+        ErrorMsg = 'In the current dictionary, there is no way to reach from ' + sourceword + ' to ' + targetword + '.'
+    except nx.NodeNotFound:
+        ErrorMsg = 'Either ' + sourceword + ' or ' + targetword + ' is not in the dictionary.'
     #print('nodes', nx.number_of_nodes(mG), nx.shortest_path(sourceword, targetword))
-    return jsonify({'result': L})
+    return jsonify({'result': L, 'error': ErrorMsg})

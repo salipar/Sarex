@@ -75,9 +75,9 @@
                 resultDiv.innerHTML = ''; // Clear previous results
 
 
-                if (data.result.length === 0) {
+                if (data.error.length != 0) {
                     const p = document.createElement('p');
-                    p.textContent = `It is not possible to move from ${sourceword} to ${targetword}`;
+                    p.textContent = `${data.error}`;
                     resultDiv.appendChild(p);
                 } else {
                     data.result.forEach(word => {
