@@ -59,8 +59,8 @@
         document.getElementById('wordForm').onsubmit = function(e) {
             e.preventDefault();
 
-            const sourceword = document.getElementById('sourceword').value;
-            const targetword = document.getElementById('targetword').value;
+            const sourceword = document.getElementById('sourceword').value.toLowerCase();
+            const targetword = document.getElementById('targetword').value.toLowerCase();
 
             fetch('/api/wordpath', {
                 method: 'POST',
