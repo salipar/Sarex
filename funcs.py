@@ -1060,11 +1060,18 @@ def wordpath():
     ErrorMsg, L = '', []
     sourceword = request.form['sourceword']
     targetword = request.form['targetword']
-    try:
-        L = nx.shortest_path(mG, sourceword, targetword)
-    except nx.NetworkXNoPath:
-        ErrorMsg = 'In the current dictionary, there is no way to reach from ' + sourceword + ' to ' + targetword + '.'
-    except nx.NodeNotFound:
-        ErrorMsg = 'Either ' + sourceword + ' or ' + targetword + ' is not in the dictionary.'
-    #print('nodes', nx.number_of_nodes(mG), nx.shortest_path(sourceword, targetword))
+
+    if sourceword not in Words and targetword not in Words:
+        ErrorMsg = 'Both ' + sourceword + ' and ' + targetword + ' are not in the dictionay.'
+    elif sourceword not in Words:
+        ErrorMsg = sourceword + ' is not in the dictionay.'
+    elif targetword not in Words:
+        ErrorMsg = targetword + ' is not in the dictionay.'
+        
+    else:       
+        try:
+            L = nx.shortest_path(mG, sourceword, targetword)
+        except nx.NetworkXNoPath:
+            ErrorMsg = 'In the current dictionary, there is no way to reach from ' + sourceword + ' to ' + targetword + '.'
+
     return jsonify({'result': L, 'error': ErrorMsg})
