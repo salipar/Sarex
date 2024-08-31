@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, render_template_string
+from flask import Blueprint, request, jsonify, render_template, redirect, url_for
 import networkx as nx
 from itertools import combinations
 import sqlite3
@@ -46,7 +46,7 @@ def BuildGraph():
     conn.close()
     
     mG.add_nodes_from(Words)
-    print(len(Words))
+
     print('Adding edges')
     for apair in combinations(Words, 2):
         w1, w2 = apair
@@ -79,7 +79,7 @@ def wordpath():
     ErrorMsg, L = '', []
     sourceword = request.form['sourceword']
     targetword = request.form['targetword']
-    print(Words)
+
     if sourceword not in Words and targetword not in Words:
         ErrorMsg = 'Both ' + sourceword + ' and ' + targetword + ' are not in the dictionay.'
         L = [sourceword, targetword]
@@ -126,54 +126,34 @@ def add_words():
 def view_words():
     conn = sqlite3.connect('words.db')
     cursor = conn.cursor()
-    
+
     cur = cursor.execute('SELECT Word FROM Word WHERE source IS NULL ORDER BY Word')
     words = cur.fetchall()
-    return render_template_string('''<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>View Words</title>
-    <style>
-        .word-list {
-            margin: 20px auto;
-            max-width: 300px;
-            text-align: center;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-        .word-list h2 {
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: #333;
-        }
-        .word-list ul {
-            list-style: none;
-            padding: 0;
-        }
-        .word-list ul li {
-            padding: 8px;
-            border-bottom: 1px solid #ccc;
-        }
-        .word-list ul li:last-child {
-            border-bottom: none;
-        }
-    </style>
-</head>
-<body>
+    conn.close()
+
+    return render_template('newwords.html', words=words)
+
+@funcs_bp.route('/managenewwords', methods=['POST'])
+def managenewwords():
+    conn = sqlite3.connect('words.db')
+    cursor = conn.cursor()
+
+    actions = []
+    for i in range(1, len(request.form)//2 + 1):
+        word = request.form.get(f'word_{i}')
+        action = request.form.get(f'action_{i}')
+
+        if action == 'delete':
+            cursor.execute('DELETE FROM Word WHERE Word = ?', (word,))
+        elif action == 'save':
+            cursor.execute('UPDATE Word SET source = ? WHERE Word = ?', ('W', word))
+        # Ignore Now means do nothing, so no SQL operation for that case
+
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for('funcs.view_words'))
+
    
 
-    <div class="word-list">
-        <h2>Manually Added Words</h2>
-        <ul>
-            {% for word in words %}
-                <li>{{ word[0] }}</li>
-            {% endfor %}
-        </ul>
-    </div>
 
-</body>
-</html>''', words=words)

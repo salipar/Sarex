@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Words</title>
+    <style>
+        .word-list {
+            margin: 20px auto;
+            max-width: 500px;
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .word-list h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .word-list .word-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #ccc;
+        }
+        .word-list .word-item:last-child {
+            border-bottom: none;
+        }
+        .word {
+            flex: 1;
+            text-align: left;
+            font-size: 18px;
+            color: #333;
+            padding-left: 10px;
+        }
+        .actions {
+            flex: 2;
+            text-align: right;
+            font-size: 14px;
+            padding-right: 10px;
+        }
+        input[type="radio"] {
+            margin-right: 5px;
+        }
+        button[type="submit"] {
+            padding: 10px 20px;
+            margin-top: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="word-list">
+        <h2>Manually Added Words</h2>
+        <form action="{{ url_for('funcs.managenewwords') }}" method="post">
+            {% for word in words %}
+            <div class="word-item">
+                <div class="word">{{ word[0] }}</div>
+                <div class="actions">
+                    <input type="radio" name="action_{{ loop.index }}" value="delete" required> Delete
+                    <input type="radio" name="action_{{ loop.index }}" value="save"> Save Permanent
+                    <input type="radio" name="action_{{ loop.index }}" value="ignore" checked> Ignore Now
+                    <input type="hidden" name="word_{{ loop.index }}" value="{{ word[0] }}">
+                </div>
+            </div>
+            {% endfor %}
+            <button type="submit">Submit Actions</button>
+        </form>
+    </div>
+</body>
+</html>
