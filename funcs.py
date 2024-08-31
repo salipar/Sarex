@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, render_template_string
 import networkx as nx
 from itertools import combinations
 import sqlite3
@@ -120,3 +120,60 @@ def add_words():
     except Exception as e:
         print(e)
         return jsonify({'success': False, 'error': str(e)})
+
+
+@funcs_bp.route('/vwords')
+def view_words():
+    conn = sqlite3.connect('words.db')
+    cursor = conn.cursor()
+    
+    cur = cursor.execute('SELECT Word FROM Word WHERE source IS NULL ORDER BY Word')
+    words = cur.fetchall()
+    return render_template_string('''<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Words</title>
+    <style>
+        .word-list {
+            margin: 20px auto;
+            max-width: 300px;
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .word-list h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .word-list ul {
+            list-style: none;
+            padding: 0;
+        }
+        .word-list ul li {
+            padding: 8px;
+            border-bottom: 1px solid #ccc;
+        }
+        .word-list ul li:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+   
+
+    <div class="word-list">
+        <h2>Manually Added Words</h2>
+        <ul>
+            {% for word in words %}
+                <li>{{ word[0] }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+</body>
+</html>''', words=words)
