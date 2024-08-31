@@ -36,6 +36,18 @@
             color: #333;
             padding-left: 10px;
         }
+        .word-button {
+            display: block;
+            margin: 5px;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            background-color: #eee;
+            color: #333;
+            font-size: 14px;
+            cursor: default;
+            text-align: center;
+        }
         .actions {
             flex: 2;
             text-align: right;
@@ -66,7 +78,7 @@
         <form action="{{ url_for('funcs.managenewwords') }}" method="post">
             {% for word in words %}
             <div class="word-item">
-                <div class="word">{{ word[0] }}</div>
+                <div class="word-button">{{ word[0] }}</div>
                 <div class="actions">
                     <input type="radio" name="action_{{ loop.index }}" value="delete" required> Delete
                     <input type="radio" name="action_{{ loop.index }}" value="save"> Save Permanent
